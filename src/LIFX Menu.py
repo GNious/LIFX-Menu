@@ -32,6 +32,9 @@ class LifxMenu(NSObject):
 		subitem =  NSMenuItem.alloc().initWithTitle_action_keyEquivalent_( 'White', 'setColour:', '')
 		subitem.setRepresentedObject_( 'White' )
 		submenu.addItem_( subitem )
+		subitem =  NSMenuItem.alloc().initWithTitle_action_keyEquivalent_( 'Bright White', 'setColour:', '')
+		subitem.setRepresentedObject_( 'BrightWhite' )
+		submenu.addItem_( subitem )
 		subitem =  NSMenuItem.alloc().initWithTitle_action_keyEquivalent_( 'Red', 'setColour:', '')
 		subitem.setRepresentedObject_( 'Red' )
 		submenu.addItem_( subitem )
@@ -42,18 +45,26 @@ class LifxMenu(NSObject):
 		subitem.setRepresentedObject_( 'Blue' )
 		submenu.addItem_( subitem )
 
-
 		for bulb in self.lights:
+			bulb.get_info()
 			submenu =  NSMenu.alloc().init()
-			item =  NSMenuItem.alloc().initWithTitle_action_keyEquivalent_( bulb.get_addr(), '', '')
+			#name =  bulb.get_addr()
+			#bulb.get_label()
+			name = bulb.bulb_label
+			item =  NSMenuItem.alloc().initWithTitle_action_keyEquivalent_( name, '', '')
 			item.setSubmenu_( submenu )
 			menu.addItem_( item )
 			subitem =  NSMenuItem.alloc().initWithTitle_action_keyEquivalent_( 'Toggle light', 'toggleBulb:', '')
 			subitem.setRepresentedObject_( bulb )
 			subitem.setState_(bulb.power)
 			submenu.addItem_( subitem )
+			subitem =  NSMenuItem.alloc().initWithTitle_action_keyEquivalent_( 'Soft light', 'softBulb:', '')
+			subitem.setRepresentedObject_( bulb )
+			submenu.addItem_( subitem )
+			subitem =  NSMenuItem.alloc().initWithTitle_action_keyEquivalent_( 'bright light', 'brightBulb:', '')
+			subitem.setRepresentedObject_( bulb )
+			submenu.addItem_( subitem )
 
-			
 		quit_item = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_('Quit', 'terminate:', '')
 		menu.addItem_(quit_item)
 
@@ -71,13 +82,37 @@ class LifxMenu(NSObject):
 		bulb.set_power(state)
 		notification.setState_(bulb.power)
 
+	def softBulb_(self, notification):
+		bulb = notification._.representedObject
+		if bulb.power :
+			hue = 9802
+			saturation = 10023
+			brightness = 65535 * 0.7
+			kelvin = 3000
+			bulb.set_color( hue, saturation, brightness, kelvin, 1000)
+
+	def brightBulb_(self, notification):
+		bulb = notification._.representedObject
+		if bulb.power :
+			hue = 54600
+			saturation = 0 #65535
+			brightness = 65535 
+			kelvin = 7000
+			bulb.set_color( hue, saturation, brightness, kelvin, 1000)
+
 	def setColour_(self, notification):
 		hue = 0;
 		saturation = 65535
+		brightness = 65535 
+		kelvin = 3500
 		colour = notification._.representedObject
 		if colour == 'White' :
 			hue = 9802
 			saturation = 10023
+		if colour == 'BrightWhite' :
+			hue = 9802
+			saturation = 0
+			kelvin = 7000
 		if colour == 'Red' :
 			hue = 0
 			saturation = 65535
@@ -88,7 +123,7 @@ class LifxMenu(NSObject):
 			hue = 65535/360*240
 			saturation = 65535
 		for bulb in self.lights:
-			bulb.set_color( hue, saturation, 65535, 3500, 1000)
+			bulb.set_color( hue, saturation, brightness, kelvin, 1000)
 
 
 if __name__ == "__main__":

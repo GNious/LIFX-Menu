@@ -59,8 +59,8 @@ class LIFXPayload:
 
     def decode(self, bs):
         if len(bs) != calcsize(self.pack_str):
-            print 'could not decode %s' % (self.name, )
-            print tohex(bs)
+            print( 'could not decode %s' % (self.name, ) )
+            print( tohex(bs))
             return
         data = unpack(self.pack_str, bs)
         self.data = dict( zip(self.pack_struct, data) )

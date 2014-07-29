@@ -10,7 +10,7 @@ import struct
 lights = {}
 
 def inttohex(n):
-    return unicode(hexlify(struct.pack('>H', n)), encoding='utf-8')
+    return str(hexlify(struct.pack('>H', n)), encoding='utf-8')
 
 class LIFXBulb:
     def __init__(self, lightstatus):
@@ -26,7 +26,7 @@ class LIFXBulb:
                 self.power)
 
     def get_addr(self):
-        return unicode(hexlify(self.addr), encoding='utf-8')
+        return str(hexlify(self.addr), encoding='utf-8')
 
     def deliverpacket(self, packet):
         if isinstance(packet.payload, packetcodec.LightStatusPayload):
@@ -53,7 +53,7 @@ class LIFXBulb:
             self.power = True
         else:
             self.power = False
-        self.bulb_label = unicode(lightstatus.payload.data['bulb_label'],
+        self.bulb_label = str(lightstatus.payload.data['bulb_label'],
                               encoding='utf-8').strip('\00')
         self.tags = lightstatus.payload.data['tags']
 
@@ -64,7 +64,7 @@ class LIFXBulb:
             self.power = False
 
     def recv_bulblabelstate(self, labelstate):
-        self.bulb_label = unicode(labelstate.payload.data['bulb_label'],
+        self.bulb_label = str(labelstate.payload.data['bulb_label'],
                               encoding='utf-8').strip('\00')
 
     def recv_timestate(self, timestate):
@@ -91,7 +91,7 @@ class LIFXBulb:
 
     def set_power(self, power):
         set_power(self.addr, power)
-        listen_and_interpret(5, packetcodec.PowerStatePayload, self.addr)
+        #listen_and_interpret(5, packetcodec.PowerStatePayload, self.addr)
 
     def set_color(self, hue, saturation, brightness, kelvin, fade_time):
         set_color(self.addr, hue, saturation, brightness, kelvin, fade_time)
