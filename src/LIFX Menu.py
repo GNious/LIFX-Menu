@@ -101,7 +101,7 @@ class LifxMenu(NSObject):
 			bulb.set_color( hue, saturation, brightness, kelvin, 1000)
 
 	def setColour_(self, notification):
-		hue = 0;
+		hue = 0
 		saturation = 65535
 		brightness = 65535 
 		kelvin = 3500
@@ -117,10 +117,10 @@ class LifxMenu(NSObject):
 			hue = 0
 			saturation = 65535
 		if( colour == 'Green' ):
-			hue = 65535/360*120
+			hue = 21845 #65535/360*120
 			saturation = 65535
 		if( colour == 'Blue' ):
-			hue = 65535/360*240
+			hue = 43690 #65535/360*240
 			saturation = 65535
 		for bulb in self.lights:
 			bulb.set_color( hue, saturation, brightness, kelvin, 1000)
